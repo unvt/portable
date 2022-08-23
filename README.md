@@ -5,7 +5,9 @@
 "UNVT Portable" is a package for RaspberryPi that functions as a map hosting server and can be freely accessed from a web browser within a local network.
 
 It is mainly intended to function in an offline environment during times of severe disaster, and is expected to play an active role in use cases such as at city halls of local governments where disaster response headquarters are set up to assess the situation and respond to disasters by combining aerial drone images taken after a disaster occurs with OpenStreetMap and various open data tile data sets prepared in advance.
+
 <img src="https://github.com/unvt/portable/blob/main/assets/img/UNVTportable_flow.png?raw=true" width="800" >
+
 
 ## How to use
 
