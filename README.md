@@ -9,6 +9,10 @@ It is mainly intended to function in an offline environment during times of seve
 <img src="https://github.com/unvt/portable/blob/main/assets/img/UNVTportable_flow.png?raw=true" width="800" >
 
 
+## How to Install
+* Online manual: https://github.com/unvt/portable/wiki
+
+
 ## How to use
 
 Connection to UNVT Portable uses an automatic Wi-Fi connection function with QR codes, and QR codes are provided for each subject map.
