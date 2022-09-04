@@ -31,7 +31,7 @@ expand-hosts
 ### Operation check
 
 - You should do followings
-  - Without connecting to `unvt-portable` WiFi AP
+  - Without connecting to `unvt-portable` WiFi AP but on the same network with Raspberry Pi
     - See http://raspberrypi.local/
   - With connecting to `unvt-portable` WiFi AP
     - See http://raspberrypi.local/

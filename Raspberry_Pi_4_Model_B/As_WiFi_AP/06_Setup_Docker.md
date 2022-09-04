@@ -5,8 +5,9 @@
 ### Add user to docker group
 
 - `sudo gpasswd -a $(whoami) docker`
+- `sudo chgrp docker /var/run/docker.sock`
 
-### Reboot
+### MUST Reboot Raspberry Pi
 
 - `sudo reboot`
 
@@ -15,3 +16,4 @@
 - You should do followings
   - Check Docker is working correctly
     - `docker -v`
+    - `docker ps`
