@@ -20,3 +20,4 @@ TILES_URL=http://raspberrypi.local/zxy/
 ### Run `make`
 
 - `make`
+- This step really takes an amazing amount of time, so let's go to bed!
