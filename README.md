@@ -18,7 +18,7 @@ It is mainly intended to function in an offline environment during times of seve
 Connection to UNVT Portable uses an automatic Wi-Fi connection function with QR codes, and QR codes are provided for each subject map.
 The system was designed so that even municipal employees unfamiliar with digital terminals can easily access geospatial information.
 
-[![demo](https://user-images.githubusercontent.com/29940264/188355297-df5fc6a6-3175-4a45-8e63-19c9a9359b79.jpeg)]([https://youtu.be/5aKI900iGVo?t=1336](https://youtube.com/shorts/_ZqT9D-Pfos?feature=share))
+https://youtube.com/shorts/_ZqT9D-Pfos
 
 
 
