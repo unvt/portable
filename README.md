@@ -21,6 +21,8 @@ The system was designed so that even municipal employees unfamiliar with digital
 demo:
 https://youtube.com/shorts/_ZqT9D-Pfos
 
+Manual:
+https://docs.google.com/presentation/d/1SuDCDUfLHZ2Xw1SdpUIillYWJekY0L4TqS7-X4sDZqg/edit?usp=sharing
 
 
 ## Original Case for UNVT Portable RaspberryPi
