@@ -2,6 +2,7 @@
 
 - Insert Micro SD Card to your Raspberry Pi
 - Connect the USB-C power adapter to your Raspberry Pi
+- Connect the Network cable to your Raspberry Pi
 
 ### SSH Log in to your Raspberry Pi
 

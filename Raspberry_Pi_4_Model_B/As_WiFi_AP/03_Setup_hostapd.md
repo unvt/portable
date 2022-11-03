@@ -5,6 +5,7 @@
 ### Edit `/etc/dhcpcd.conf`
 
 - `sudo vim /etc/dhcpcd.conf`
+- To enter the insert mode of vim, press `i`
 - ADD following lines to the END of file:
 
 ```
@@ -13,10 +14,13 @@ interface wlan0
     nohook wpa_supplicant
 ```
 
+- To Save and Exit vim, press `Esc`, then input `:wq!`
+
 ### Add `/etc/hostapd/hostapd.conf`
 
 - `sudo vim /etc/hostapd/hostapd.conf`
-- Create a new file with the following contents
+- To enter the insert mode of vim, press `i`
+- Create a new file with the following contents:
 
 ```
 country_code=JP
@@ -30,6 +34,8 @@ wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 ```
+
+- To Save and Exit vim, press `Esc`, then input `:wq!`
 
 ### Star up `hostapd`
 

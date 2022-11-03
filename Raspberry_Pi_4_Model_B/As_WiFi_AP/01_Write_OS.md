@@ -10,8 +10,8 @@
   - Select your SD Card
 - Click gear icon (advanced settings menu)
   - Check ON: Set hostname: raspberrypi.local
-  - ** Check ON: Enable SSH **
-  - ** Check OFF: Configure WiFi **
+  - **Check ON: Enable SSH**
+  - **Check OFF: Configure WiFi**
   - Check ON: Set locale settings
     - Enter your Time zone and Keyboard layout
 - WRITE
