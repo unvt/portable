@@ -5,7 +5,9 @@
 ### Edit `/etc/dnsmasq.conf`
 
 - `sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig`
-- `sudo vim /etc/dnsmasq.conf` and rewrite as following:
+- `sudo vim /etc/dnsmasq.conf`
+- To enter the insert mode of vim, press `i`
+- Rewrite all as following:
 
 ```
 # Listening interface
@@ -21,6 +23,8 @@ local=/local/
 domain=local
 expand-hosts
 ```
+
+- To Save and Exit vim, press `Esc`, then input `:wq!`
 
 ### Start up `dnsmasq`
 
