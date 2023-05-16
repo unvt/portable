@@ -1,6 +1,6 @@
 # UNVT Portable
 
-## Wtat is UNVT Portable
+## What is UNVT Portable?
 
 "UNVT Portable" is a package for RaspberryPi that functions as a map hosting server and can be freely accessed from a web browser within a local network.
 
