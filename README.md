@@ -4,6 +4,7 @@
  * [Online Manual update(2024-10-30)](https://github.com/unvt/portable/wiki)
  * [UNVT Portable Workshop 2024 @ PoliMI(2024-10-08)](https://github.com/unvt/portable/issues/29)
  * [UN OpenGIS Initiative Workshop @ FOSS4G 2023 Prizren(2023-06-27)](https://github.com/unvt/portable/issues/23)
+ * [UN OpenGIS Initiative Conference @ FOSS4G 2022 Firenze](https://github.com/unvt/portable/issues/1)
 
 ## What is UNVT Portable?
 
