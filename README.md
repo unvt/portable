@@ -1,11 +1,11 @@
 # UNVT Portable
 
 ## 0. What's New
- * [Online Manual update(2024-10-30)](https://github.com/unvt/portable/wiki)
- * [UNVT Portable Workshop 2024 @ PoliMI(2024-10-08)](https://github.com/unvt/portable/issues/29)
- * [UN OpenGIS Initiative Workshop @ FOSS4G 2023 Prizren(2023-06-27)](https://github.com/unvt/portable/issues/23)
- * [OpenStreetMap Meetup 2023 @ FuruhashiLab, Aoyama Gakuin University(2023-03-03)](https://github.com/unvt/portable/issues/16)
- * [UN OpenGIS Initiative Conference @ FOSS4G 2022 Firenze(2022-08-25)](https://github.com/unvt/portable/issues/1)
+ * [Online Manual update (2024-10-30)](https://github.com/unvt/portable/wiki)
+ * [UNVT Portable Workshop 2024 @ PoliMI (2024-10-08)](https://github.com/unvt/portable/issues/29)
+ * [UN OpenGIS Initiative Workshop @ FOSS4G 2023 Prizren (2023-06-27)](https://github.com/unvt/portable/issues/23)
+ * [OpenStreetMap Meetup 2023 @ FuruhashiLab, Aoyama Gakuin University (2023-03-03)](https://github.com/unvt/portable/issues/16)
+ * [UN OpenGIS Initiative Conference @ FOSS4G 2022 Firenze (2022-08-25)](https://github.com/unvt/portable/issues/1)
 
 ## 1. What is UNVT Portable?
 
