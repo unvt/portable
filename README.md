@@ -1,12 +1,12 @@
 # UNVT Portable
 
-## Whats's New
+## 0. What's New
  * [Online Manual update(2024-10-30)](https://github.com/unvt/portable/wiki)
  * [UNVT Portable Workshop 2024 @ PoliMI(2024-10-08)](https://github.com/unvt/portable/issues/29)
  * [UN OpenGIS Initiative Workshop @ FOSS4G 2023 Prizren(2023-06-27)](https://github.com/unvt/portable/issues/23)
  * [UN OpenGIS Initiative Conference @ FOSS4G 2022 Firenze(2022-08-25)](https://github.com/unvt/portable/issues/1)
 
-## What is UNVT Portable?
+## 1. What is UNVT Portable?
 
 "UNVT Portable" is a package for RaspberryPi that functions as a map hosting server and can be freely accessed from a web browser within a local network.
 
@@ -15,11 +15,11 @@ It is mainly intended to function in an offline environment during times of seve
 <img src="https://github.com/unvt/portable/blob/main/assets/img/UNVTportable_flow.png?raw=true" width="800" >
 
 
-## How to Install
+## 3. How to Install
 * Online manual: https://github.com/unvt/portable/wiki
 
 
-## How to use
+## 4. How to use
 
 Connection to UNVT Portable uses an automatic Wi-Fi connection function with QR codes, and QR codes are provided for each subject map.
 The system was designed so that even municipal employees unfamiliar with digital terminals can easily access geospatial information.
