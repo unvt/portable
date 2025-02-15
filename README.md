@@ -1,7 +1,7 @@
 # UNVT Portable
 
 ## 0. What's New
- * [Sample /var/www/html Hosting Dataset for 512GB SDcard](https://drive.google.com/drive/folders/171qG6YwVy74rYSq4XKxUlvR-qO8vmpJF?usp=drive_link)
+ * [Sample /var/www/html Hosting Dataset for 512GB SDcard on Google Drive](https://drive.google.com/drive/folders/171qG6YwVy74rYSq4XKxUlvR-qO8vmpJF?usp=drive_link)
  * [Online Manual update (2024-10-30)](https://github.com/unvt/portable/wiki)
  * [UNVT Portable Hands-on 2024 @ LBS class, PoliMI (2024-10-31)](https://github.com/unvt/portable/issues/38)
  * [UNVT Portable Workshop 2024 @ PoliMI (2024-10-08)](https://github.com/unvt/portable/issues/29)
