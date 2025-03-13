@@ -1,0 +1,363 @@
+<?doctype html>
+<html>
+  <head>
+  <meta charset="UTF-8" />
+    <title>glob</title>
+    <link href="./maplibre-gl.css" rel="stylesheet" />
+    <script src="./maplibre-gl.js" crossorigin="anonymous"></script>
+    <script src="./pmtiles.js"></script>
+    <!-- Turf.js を相対パスで読み込む -->
+    <script src="./turf.min.js"></script>
+    <style>
+      body { margin: 0; }
+      #map { height: 100%; width: 100%; }
+      /* 全画面ドラッグ＆ドロップ用オーバーレイ */
+      #drop-zone {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.7);
+        border: 4px dashed blue;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: blue;
+        z-index: 1000;
+        pointer-events: auto;
+      }
+      /* レイヤコントロールのスタイル */
+      #layer-control {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(255,255,255,0.9);
+        padding: 10px;
+        max-height: 80%;
+        overflow-y: auto;
+        z-index: 1100;
+        font-family: sans-serif;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        width: 330px;
+      }
+      #layer-control.collapsed {
+        transform: translateX(-370px);
+        opacity: 0;
+        pointer-events: none;
+      }
+      #layer-control header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      /* コラップスボタン */
+      #toggle-collapse {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1101;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        transition: left 0.3s ease-in-out;
+      }
+      #layer-control:not(.collapsed) ~ #toggle-collapse {
+        left: 370px;
+      }
+      /* 各ソースグループ */
+      .source-group {
+        margin-bottom: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 5px;
+      }
+      .source-group header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* 左寄せ */
+        gap: 8px;
+        font-weight: bold;
+        margin-bottom: 3px;
+      }
+      .source-group header span.source-name {
+        width: 300px;
+        display: inline-block;
+      }
+      .source-group label {
+        display: block;
+        margin-left: 20px;
+        margin-bottom: 3px;
+      }
+      .layer-content {
+        transition: opacity 0.2s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 全画面ドラッグ＆ドロップ用オーバーレイ -->
+    <div id="drop-zone">You can drag&drop a GeoJSON file</div>
+    <div id="map"></div>
+    <!-- レイヤコントロールダイアログ：初期状態で Loading layers... を表示 -->
+    <div id="layer-control">Loading layers...</div>
+    <!-- 折りたたみボタン -->
+    <div id="toggle-collapse" title="Toggle layer control">&#9776;</div>
+
+    <script>
+      let protocol = new pmtiles.Protocol();
+      maplibregl.addProtocol("pmtiles", protocol.tile.bind(protocol));
+
+      let map; // グローバルに保持
+      // 表示順のトグル（true: style 定義順の昇順、false: 降順）
+      let layerOrderAsc = true;
+      let layerControlCollapsed = false;
+
+      // 折りたたみボタンのイベントリスナー設定
+      const toggleCollapseBtn = document.getElementById("toggle-collapse");
+      const layerControl = document.getElementById("layer-control");
+      
+      toggleCollapseBtn.addEventListener("click", () => {
+        layerControlCollapsed = !layerControlCollapsed;
+        if (layerControlCollapsed) {
+          layerControl.classList.add("collapsed");
+          toggleCollapseBtn.innerHTML = "&#9776;"; // ハンバーガーメニューアイコン
+        } else {
+          layerControl.classList.remove("collapsed");
+          toggleCollapseBtn.innerHTML = "&#10005;"; // ×アイコン
+        }
+      });
+
+      // マップの初期化
+      fetch("style_formatted4http.json")
+        .then(resp => resp.json())
+        .then(style => {
+          const container = document.getElementById("map");
+          map = new maplibregl.Map({
+            container: container,
+            style: style,
+            center: [12.047, 42.268],
+            zoom: 5.4,
+            localIdeographFontFamily: '"NotoSansJP-Regular", sans-serif',
+            maxPitch: 85,
+            hash: true
+          });
+          map.addControl(new maplibregl.FullscreenControl());
+          map.addControl(new maplibregl.NavigationControl());
+          map.addControl(new maplibregl.TerrainControl({ source: "gel-raster-dem" }));
+          map.addControl(new maplibregl.ScaleControl({ unit: "metric" }));
+          map.addControl(new maplibregl.GeolocateControl());
+
+          map.on("load", () => {
+            updateLayerControl();
+          });
+        });
+
+      /**
+       * レイヤコントロールの更新：
+       * スタイルのレイヤ情報がまだ取得できない場合は "Loading layers..." を表示し、再試行
+       * 取得できたら、各ソースごとにグループ化して表示する。
+       */
+      function updateLayerControl() {
+        const controlDiv = document.getElementById("layer-control");
+        const styleObj = map.getStyle();
+        if (!styleObj || !styleObj.layers || styleObj.layers.length === 0) {
+          controlDiv.innerHTML = "<strong>Layers</strong><br>Loading layers...";
+          setTimeout(updateLayerControl, 500);
+          return;
+        }
+
+        controlDiv.innerHTML = "";
+        
+        // ルートヘッダー
+        const rootHeader = document.createElement("header");
+        const rootTitle = document.createElement("strong");
+        rootTitle.textContent = "Layers";
+        const rootToggle = document.createElement("span");
+        rootToggle.className = "toggle";
+        rootToggle.style.cursor = "pointer";
+        rootToggle.textContent = layerOrderAsc ? "\u25B2" : "\u25BC";
+        rootToggle.addEventListener("click", () => {
+          layerOrderAsc = !layerOrderAsc;
+          rootToggle.textContent = layerOrderAsc ? "\u25B2" : "\u25BC";
+          updateLayerControl();
+        });
+        rootHeader.appendChild(rootTitle);
+        rootHeader.appendChild(rootToggle);
+        controlDiv.appendChild(rootHeader);
+
+        // レイヤーコンテンツ用のコンテナ
+        const layerContent = document.createElement("div");
+        layerContent.className = "layer-content";
+        controlDiv.appendChild(layerContent);
+
+        // style のレイヤを取得（コピー）
+        let layers = map.getStyle().layers.slice();
+        if (!layerOrderAsc) {
+          layers.reverse();
+        }
+        // ソースごとにグループ化（source 未定義の場合は "no-source"）
+        const groups = {};
+        layers.forEach(layer => {
+          const src = layer.source ? layer.source : "no-source";
+          if (!groups[src]) groups[src] = [];
+          groups[src].push(layer);
+        });
+
+        // 各グループごとに表示
+        Object.keys(groups).forEach(src => {
+          const groupDiv = document.createElement("div");
+          groupDiv.className = "source-group";
+
+          // グループヘッダー：マスター・チェックボックス＋固定幅のソース名（左寄せ）
+          const groupHeader = document.createElement("header");
+          const groupCheckbox = document.createElement("input");
+          groupCheckbox.type = "checkbox";
+          let allVisible = groups[src].every(layer => {
+            const vis = map.getLayoutProperty(layer.id, "visibility");
+            return (vis === undefined || vis === "visible");
+          });
+          groupCheckbox.checked = allVisible;
+          groupCheckbox.addEventListener("change", (e) => {
+            const newVis = e.target.checked ? "visible" : "none";
+            groups[src].forEach(layer => {
+              map.setLayoutProperty(layer.id, "visibility", newVis);
+            });
+            updateLayerControl();
+          });
+          const groupTitle = document.createElement("span");
+          groupTitle.className = "source-name";
+          groupTitle.style.width = "300px";
+          groupTitle.style.display = "inline-block";
+          groupTitle.textContent = src;
+
+          groupHeader.appendChild(groupCheckbox);
+          groupHeader.appendChild(groupTitle);
+          groupDiv.appendChild(groupHeader);
+
+          // グループ内の各レイヤのチェックボックス
+          groups[src].forEach(layer => {
+            const label = document.createElement("label");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            const vis = map.getLayoutProperty(layer.id, "visibility");
+            checkbox.checked = (vis === undefined || vis === "visible");
+            checkbox.dataset.layerId = layer.id;
+            checkbox.addEventListener("change", (e) => {
+              const layerId = e.target.dataset.layerId;
+              map.setLayoutProperty(layerId, "visibility", e.target.checked ? "visible" : "none");
+              updateLayerControl();
+            });
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(" " + layer.id));
+            groupDiv.appendChild(label);
+          });
+
+          layerContent.appendChild(groupDiv);
+        });
+      }
+
+      /**
+       * GeoJSON をマップに追加し、BBOX に合わせて画面をフィットさせる関数
+       */
+      function addGeoJSONToMap(geojson) {
+        if (!map) {
+          console.error("Map is not initialized.");
+          return;
+        }
+        if (map.getSource("geojson-overlay")) {
+          if (map.getLayer("geojson-layer")) {
+            map.removeLayer("geojson-layer");
+          }
+          map.removeSource("geojson-overlay");
+        }
+        map.addSource("geojson-overlay", {
+          type: "geojson",
+          data: geojson
+        });
+        let layerType = "fill";
+        if (geojson.features && geojson.features.length > 0) {
+          const geomType = geojson.features[0].geometry.type;
+          if (geomType === "Point" || geomType === "MultiPoint") {
+            layerType = "circle";
+          } else if (geomType === "LineString" || geomType === "MultiLineString") {
+            layerType = "line";
+          }
+        }
+        map.addLayer({
+          id: "geojson-layer",
+          type: layerType,
+          source: "geojson-overlay",
+          paint: layerType === "fill" ? {
+            "fill-color": "#ff0000",
+            "fill-opacity": 0.5
+          } : layerType === "line" ? {
+            "line-color": "#ff0000",
+            "line-width": 2
+          } : layerType === "circle" ? {
+            "circle-radius": 5,
+            "circle-color": "#ff0000"
+          } : {}
+        });
+        try {
+          const bbox = turf.bbox(geojson);
+          map.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], { padding: 20 });
+        } catch (error) {
+          console.error("Failed to calculate BBOX:", error);
+        }
+        updateLayerControl();
+      }
+
+      // ドラッグ＆ドロップ処理（全画面対応）
+      const dropZone = document.getElementById("drop-zone");
+
+      document.addEventListener("dragenter", (event) => {
+        event.preventDefault();
+        dropZone.style.display = "flex";
+      });
+      document.addEventListener("dragover", (event) => {
+        event.preventDefault();
+      });
+      document.addEventListener("dragleave", (event) => {
+        if (event.target === document || event.target === document.body) {
+          dropZone.style.display = "none";
+        }
+      });
+      document.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dropZone.style.display = "none";
+        const file = event.dataTransfer.files[0];
+        if (file) {
+          const validTypes = ["application/json", "application/geo+json", "text/plain"];
+          const fileName = file.name.toLowerCase();
+          if (validTypes.includes(file.type) || fileName.endsWith(".geojson") || fileName.endsWith(".json")) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              try {
+                const geojson = JSON.parse(e.target.result);
+                addGeoJSONToMap(geojson);
+              } catch (err) {
+                alert("Failed to parse GeoJSON. Please check the file content.");
+              }
+            };
+            reader.readAsText(file);
+          } else {
+            alert("Please select a GeoJSON file!");
+          }
+        } else {
+          alert("No file found!");
+        }
+      });
+    </script>
+  </body>
+</html>
