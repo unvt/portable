@@ -28,7 +28,7 @@ Connection to UNVT Portable uses an automatic Wi-Fi connection function with QR 
 The system was designed so that even municipal employees unfamiliar with digital terminals can easily access geospatial information.
 
 demo:
-https://youtube.com/shorts/_ZqT9D-Pfos
+[https://youtube.com/shorts/XUsOE_sISLM?si=75BxdS7iqU5xTK3E](https://youtube.com/shorts/XUsOE_sISLM?si=75BxdS7iqU5xTK3E)
 
 Manual:
 https://docs.google.com/presentation/d/1SuDCDUfLHZ2Xw1SdpUIillYWJekY0L4TqS7-X4sDZqg/edit?usp=sharing
